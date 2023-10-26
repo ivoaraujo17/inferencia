@@ -78,7 +78,7 @@ def kolmogorov_smirnov(caminho_do_arquivo, alpha):
             #return df
         return resultado
     except Exception as e:
-        return [False, e]
+        return [[False, e]]
     
 
 def kolmogorov_smirnov_(caminho_do_arquivo, alpha):
@@ -167,5 +167,5 @@ def kolmogorov_smirnov_(caminho_do_arquivo, alpha):
             #return df
         return resultado
     except Exception as e:
-        return [False, e]
+        return [[False, e]]
         
