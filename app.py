@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
-
+from kolmogorov_smirnov import kolmogorov_smirnov, kolmogorov_smirnov_
 
 class App(ctk.CTk):
     def __init__(self):
@@ -30,6 +30,8 @@ class App(ctk.CTk):
         self.button_select_file = ctk.CTkButton(master=self, text="Selecionar arquivo", font=self.my_font, command=self.button_select_file_event, hover_color=self.hover_color_bt)
         # label que mostra o caminho do arquivo selecionado
         self.label_file_select = ctk.CTkLabel(master=self, text="Nenhum arquivo selecionado", font=self.my_font_low)
+        self.label_resultado_geral = ctk.CTkLabel(master=self, text="", font=self.my_font_low)
+        self.label_mensagens = ctk.CTkLabel(master=self, text="", font=self.my_font_low)
         # botão de execução
         self.button_executar = ctk.CTkButton(master=self, text="Executar", font=self.my_font, command=self.button_executar_event, hover_color=self.hover_color_bt)
         # prepara o canva do grafico
@@ -38,8 +40,16 @@ class App(ctk.CTk):
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
 
     def button_executar_event(self):
+        alfa = 0.05
+        caminho_arquivo = "amostras_normais.csv"
         if self.radio_var.get() == 1:
-            print("teste 1")
+            resultado = kolmogorov_smirnov(caminho_arquivo, alfa)
+            if resultado[0]:
+                self.label_resultado_geral.configure(text=resultado[1])
+                self.label_mensagens.configure(text=resultado[2])
+            else:
+                self.label_resultado_geral.configure(text="Erro")
+                self.label_mensagens.configure(text=resultado[1])
         elif self.radio_var.get() == 2:
             print("teste 2")
         else:
@@ -64,6 +74,8 @@ class App(ctk.CTk):
         self.button_select_file.place(x=400, y=145)
         # Label que mostra o caminho do arquivo selecionado
         self.label_file_select.place(x=400, y=175)
+        self.label_resultado_geral.place(x=100, y=300)
+        self.label_mensagens.place(x=100, y=350)
         # Botão de execução
         self.button_executar.place(x=150, y=260)
         
