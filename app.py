@@ -4,6 +4,7 @@ from tkinter.filedialog import askopenfilename
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from kolmogorov_smirnov import kolmogorov_smirnov, kolmogorov_smirnov_
+from shapiro_wilk import shapiro_wilk
 
 class App(ctk.CTk):
     def __init__(self):
@@ -25,8 +26,8 @@ class App(ctk.CTk):
         self.file_name = tk.StringVar() # variavel que armazena o nome do arquivo selecionado
         self.radio_var = tk.IntVar(value=0) # variavel que armazena o valor do radio button selecionado
         # radio buttons com a lista de testes
-        self.teste_1 = ctk.CTkRadioButton(master=self, text="teste 1", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=1)
-        self.teste_2 = ctk.CTkRadioButton(master=self, text="teste 2", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=2)
+        self.teste_1 = ctk.CTkRadioButton(master=self, text="Kolmogorov", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=1)
+        self.teste_2 = ctk.CTkRadioButton(master=self, text="Shapiro_Wilk", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=2)
         # botão de seleção do arquivo excel
         self.button_select_file = ctk.CTkButton(master=self, text="Selecionar arquivo", font=self.my_font, command=self.button_select_file_event, hover_color=self.hover_color_bt)
         # label que mostra o caminho do arquivo selecionado
@@ -69,7 +70,23 @@ class App(ctk.CTk):
                     canvas.get_tk_widget().grid(row=2, column=0)
 
         elif self.radio_var.get() == 2:
-            print("teste 2")
+            resultados = shapiro_wilk(self.file_name.get(), alfa)
+            if not resultados[0][0]:
+                self.tabview.add("amostra_1")
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text=resultados[0][1], font=self.my_font_low).grid(row=1, column=0)
+            else:
+                for i, resultado in enumerate(resultados):
+                    nome = str(f'amostra_{i+1}')
+                    self.tabview.add(nome)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[1], font=self.my_font_low).grid(row=0, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[2], font=self.my_font_low).grid(row=1, column=0)
+                    # prepara o canva do grafico
+                    fig = plt.Figure(figsize=(4, 2), dpi=100)
+                    ax = fig.add_subplot(111)
+                    canvas = FigureCanvasTkAgg(fig, self.tabview.tab(nome))
+                    # grafico com o resultado
+                    canvas.get_tk_widget().grid(row=2, column=0)
         else:
             print("nenhum teste selecionado")
     
