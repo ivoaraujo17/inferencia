@@ -1,5 +1,7 @@
+import csv
 import numpy as np
 import random
+import pandas as pd
 
 def amostra_normal():
     # Especifique as médias e desvios padrão para cada amostra
@@ -39,4 +41,30 @@ def amostra_quiquadrada():
         amostras_quiquad.append(amostra)
 
     return amostras_quiquad
+
+def criar_csv(nome_csv, amostras):
+    max = 0
+    with open(nome_csv, 'w', newline='') as arquivo_csv:
+        escritor_csv = csv.writer(arquivo_csv)
+        lista_pivotada = []
+        for linha in amostras:
+            if len(linha) > max:
+                max = len(linha)
+        for linha_cod in range(max):
+            lista_aux = []
+            for linhas in amostras:
+                try:
+                    lista_aux.append(linhas[linha_cod])
+                except:
+                    lista_aux.append("")
+            lista_pivotada.append(lista_aux)
+    pd.DataFrame(lista_pivotada).to_csv(nome_csv, index=False, header=False)
+#convertendo uma amostra gamma em csv
+
+amostras_normais = amostra_normal()
+amostras_quiquad = amostra_quiquadrada()
+amostras_gamma = amostra_gamma()
+criar_csv("amostras_normais_shapiro.csv", amostras_normais)
+criar_csv("amostras_quiquad_shapiro.csv", amostras_quiquad)
+criar_csv("amostras_gamma_shapiro.csv", amostras_gamma)
 
