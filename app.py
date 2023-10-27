@@ -70,6 +70,9 @@ class App(ctk.CTk):
                     # prepara o canva do grafico
                     fig = plt.Figure(figsize=(4, 2), dpi=100)
                     ax = fig.add_subplot(111)
+                    ax.xaxis.set_label_position("top")
+                    ax.set_xlabel('Valores')  
+                    ax.set_ylabel('Frequência Absoluta')  
                     if grafico == 1:
                         ax.hist(Xis[i], bins = len(Xis[i]), density = False)
                     else:
@@ -79,7 +82,7 @@ class App(ctk.CTk):
                     canvas.get_tk_widget().grid(row=2, column=0)
 
         elif self.radio_var.get() == 2:
-            resultados = shapiro_wilk(self.file_name.get(), alfa)
+            resultados, valores_grafico = shapiro_wilk(self.file_name.get(), alfa)
             if not resultados[0][0]:
                 self.tabview.add("amostra_1")
                 ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
@@ -93,6 +96,10 @@ class App(ctk.CTk):
                     # prepara o canva do grafico
                     fig = plt.Figure(figsize=(4, 2), dpi=100)
                     ax = fig.add_subplot(111)
+                    ax.xaxis.set_label_position("top")
+                    ax.set_xlabel('Valores')  
+                    ax.set_ylabel('Frequência Absoluta')  
+                    ax.hist(valores_grafico[i], bins = len(valores_grafico[i]), density = False)
                     canvas = FigureCanvasTkAgg(fig, self.tabview.tab(nome))
                     # grafico com o resultado
                     canvas.get_tk_widget().grid(row=2, column=0)

@@ -11,12 +11,14 @@ tabela_Wcrit["tamanho n"] = tabela_Wcrit["tamanho n"].astype(int)
 def shapiro_wilk(caminho_do_arquivo, alpha, Tabela_Wcrit = tabela_Wcrit, tabela_de_coeficientes_Ain = coeficientes_Ain):
     try:
         resultado = []
+        listas_de_valores_grafico = []
         # Lendo o arquivo csv
         df = pd.read_csv(caminho_do_arquivo)
         for i in range(len(df.columns)):
             lista_de_valores = df.iloc[:, i]
             lista_de_valores = lista_de_valores.dropna()
             lista_de_valores = sorted(lista_de_valores)
+            listas_de_valores_grafico.append(lista_de_valores)
             # Encontrando o valor de n (tamanho da amostra)
             n = len(lista_de_valores)
             if n > 30 or n < 3:
@@ -77,6 +79,6 @@ def shapiro_wilk(caminho_do_arquivo, alpha, Tabela_Wcrit = tabela_Wcrit, tabela_
             # Criando um dataframe no pandas com todas as colunas
             #df = pd.DataFrame({'i' : i_, 'n - (i - 1)' : n_menos_i_menos_1, 'Ai,n' : Ain, 'X(n-(i-1))' : X_n_menos_i_menos_1,
                                 #'Xi' : Xi, 'Valores Bi' : valores_Bi})
-        return resultado
+        return resultado, listas_de_valores_grafico
     except Exception as e:
         return [[False, e]]
