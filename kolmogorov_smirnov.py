@@ -4,6 +4,7 @@ from scipy.stats import norm, ksone
 
 def kolmogorov_smirnov(caminho_do_arquivo, alpha):
     try:
+        lista_dos_Xis = []
         resultado = []
         # Lendo o arquivo csv
         df = pd.read_csv(caminho_do_arquivo)
@@ -60,6 +61,8 @@ def kolmogorov_smirnov(caminho_do_arquivo, alpha):
                 elif alpha == 0.01:
                     Dtab = 1.63 / np.sqrt(len(lista_ordenada))
             
+
+            lista_dos_Xis.append(Xi)
             lista_aux = []
             lista_aux.append(True)
             if Dcalc < Dtab:
@@ -76,14 +79,16 @@ def kolmogorov_smirnov(caminho_do_arquivo, alpha):
 
             #df = pd.DataFrame({'Xi': Xi, 'FreqAbs': freq_abs, 'FreqAcum': freq_acum, 'FreqRelAcum': freq_rel_acum, 'Zi': Zi, 'Fesp': freq_esperada, '|Fesp - Frac|': Fesp_menos_Frac, '|Fesp - Frac-1|': Fesp_menos_Frac_1})
             #return df
-        return resultado
+        return resultado, lista_dos_Xis
     except Exception as e:
         return [[False, e]]
     
 
 def kolmogorov_smirnov_(caminho_do_arquivo, alpha):
     try:
+        lista_dos_Xis = []
         resultado = []
+        frequencias_abs = []
         # Lendo o arquivo csv
         df = pd.read_csv(caminho_do_arquivo)
         # Obtendo a coluna de valores
@@ -148,7 +153,10 @@ def kolmogorov_smirnov_(caminho_do_arquivo, alpha):
                     Dtab = 1.36 / np.sqrt(len(lista_ordenada))
                 elif alpha == 0.01:
                     Dtab = 1.63 / np.sqrt(len(lista_ordenada))
-            
+
+
+            frequencias_abs.append(freq_abs)
+            lista_dos_Xis.append(Xi)
             lista_aux = []
             lista_aux.append(True)
             if Dcalc < Dtab:
@@ -165,7 +173,7 @@ def kolmogorov_smirnov_(caminho_do_arquivo, alpha):
 
             #df = pd.DataFrame({'Xi': Xi, 'FreqAbs': freq_abs, 'FreqAcum': freq_acum, 'FreqRelAcum': freq_rel_acum, 'Zi': Zi, 'Fesp': freq_esperada, '|Fesp - Frac|': Fesp_menos_Frac, '|Fesp - Frac-1|': Fesp_menos_Frac_1})
             #return df
-        return resultado
+        return resultado, lista_dos_Xis, frequencias_abs
     except Exception as e:
         return [[False, e]]
         

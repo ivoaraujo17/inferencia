@@ -64,6 +64,7 @@ def shapiro_wilk(caminho_do_arquivo, alpha, Tabela_Wcrit = tabela_Wcrit, tabela_
             3 corresponde ao índice 0, uma de tamanho 4 corresponde ao índice 1, e assim por diante."""
             
             lista_aux = []
+            lista_aux.append(True)
             if Wcrit < Wcalc:
                 lista_aux.append("Wcrit = %.4f < Wcalc = %.4f" % (Wcrit, Wcalc))
                 lista_aux.append("Aceito a hipótese H0 que a amostra segue uma distribuição normal.")
