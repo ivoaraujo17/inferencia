@@ -51,12 +51,15 @@ class App(ctk.CTk):
         self.remove_tabview()
         alfa = 0.05
         if self.radio_var.get() == 1:
-            if "amostras_normais.csv"  in self.file_name.get():
+            if "amostras_normais.csv" in self.file_name.get():
                 resultados, Xis = kolmogorov_smirnov(self.file_name.get(), alfa)
                 grafico = 1
+            elif "amostra_kolmogorov_do_pdf.csv" in self.file_name.get():
+                resultados, Xis = kolmogorov_smirnov(self.file_name.get(), alfa)
+                grafico = 2
             else:
                 resultados, Xis, freq_abs = kolmogorov_smirnov_(self.file_name.get(), alfa)
-                grafico = 2
+                grafico = 3
             if not resultados[0][0]:
                 self.tabview.add("amostra_1")
                 ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
@@ -75,6 +78,8 @@ class App(ctk.CTk):
                     ax.set_ylabel('Frequência Absoluta')  
                     if grafico == 1:
                         ax.hist(Xis[i], bins = len(Xis[i]), density = False)
+                    elif grafico == 2:
+                        ax.hist(Xis[i], bins = 10, density = False)
                     else:
                         ax.bar(Xis[i], freq_abs[i])
                     canvas = FigureCanvasTkAgg(fig, self.tabview.tab(nome))
