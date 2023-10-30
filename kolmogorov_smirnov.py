@@ -81,7 +81,7 @@ def kolmogorov_smirnov(caminho_do_arquivo, alpha):
             #return df
         return resultado, lista_dos_Xis
     except Exception as e:
-        return [[False, e]]
+        return [[False, e]], None
     
 
 def kolmogorov_smirnov_(caminho_do_arquivo, alpha):
@@ -175,5 +175,5 @@ def kolmogorov_smirnov_(caminho_do_arquivo, alpha):
             #return df
         return resultado, lista_dos_Xis, frequencias_abs
     except Exception as e:
-        return [[False, e]]
+        return [[False, e]], None, None
         

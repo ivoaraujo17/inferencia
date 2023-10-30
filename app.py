@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from kolmogorov_smirnov import kolmogorov_smirnov, kolmogorov_smirnov_
 from shapiro_wilk import shapiro_wilk
 
+
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -18,7 +19,7 @@ class App(ctk.CTk):
         self.my_font = ctk.CTkFont(family="Courier", size=20)
         self.my_font_low = ctk.CTkFont(family="Courier", size=14)
         self.protocol("WM_DELETE_WINDOW", self.window_close)
-        ctk.set_appearance_mode("dark")
+        ctk.set_appearance_mode("white")
         ctk.set_default_color_theme("dark-blue")
         self.hover_color_bt = ("green", "darkgreen")
 
@@ -36,7 +37,10 @@ class App(ctk.CTk):
         self.button_executar = ctk.CTkButton(master=self, text="Executar", font=self.my_font, command=self.button_executar_event, hover_color=self.hover_color_bt)
         # tabela de resultados
         self.tabview = ctk.CTkTabview(master=self, width=1100, height=320)
+        #valor alpha
+        self.valor_alpha = ctk.CTkEntry(master=self, width=80, placeholder_text='alpha')
         
+
     def remove_tabview(self):
         indice = 1
         while True:
@@ -49,8 +53,15 @@ class App(ctk.CTk):
 
     def button_executar_event(self):
         self.remove_tabview()
-        alfa = 0.05
-        if self.radio_var.get() == 1:
+        alfa = None
+        if self.valor_alpha.get() == '':
+            return
+        else:
+            try:
+                alfa = float(self.valor_alpha.get())
+            except:
+                return
+        if self.radio_var.get() == 1 and self.file_is_valid():
             if "amostras_normais.csv" in self.file_name.get():
                 resultados, Xis = kolmogorov_smirnov(self.file_name.get(), alfa)
                 grafico = 1
@@ -60,6 +71,7 @@ class App(ctk.CTk):
             else:
                 resultados, Xis, freq_abs = kolmogorov_smirnov_(self.file_name.get(), alfa)
                 grafico = 3
+            self.remove_tabview()
             if not resultados[0][0]:
                 self.tabview.add("amostra_1")
                 ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
@@ -85,8 +97,8 @@ class App(ctk.CTk):
                     canvas = FigureCanvasTkAgg(fig, self.tabview.tab(nome))
                     # grafico com o resultado
                     canvas.get_tk_widget().grid(row=2, column=0)
-
-        elif self.radio_var.get() == 2:
+                self.tabview.tab('amostra_1').focus_force()
+        elif self.radio_var.get() == 2 and self.file_is_valid():
             resultados, valores_grafico = shapiro_wilk(self.file_name.get(), alfa)
             if not resultados[0][0]:
                 self.tabview.add("amostra_1")
@@ -117,6 +129,12 @@ class App(ctk.CTk):
         self.label_file_select.configure(text=filename)
         self.file_name.set(filename)
     
+    def file_is_valid(self):
+        if self.file_name.get() == '':
+            return False
+        else:
+            return True
+    
     def run(self):
         # Coloca cada elemento em seu devido lugar
         ## titulos
@@ -132,6 +150,8 @@ class App(ctk.CTk):
         self.button_select_file.place(x=600, y=145)
         # Label que mostra o caminho do arquivo selecionado
         self.label_file_select.place(x=600, y=175)
+        # 
+        self.valor_alpha.place(x=300, y=180)
         # Botão de execução
         self.button_executar.place(x=300, y=220)
         # Tabela de resultados
@@ -143,7 +163,6 @@ class App(ctk.CTk):
     
     def window_close(self):
         self.destroy()
-
 
 app = App()
 app.run()

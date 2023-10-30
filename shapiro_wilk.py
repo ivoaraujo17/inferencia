@@ -81,4 +81,4 @@ def shapiro_wilk(caminho_do_arquivo, alpha, Tabela_Wcrit = tabela_Wcrit, tabela_
                                 #'Xi' : Xi, 'Valores Bi' : valores_Bi})
         return resultado, listas_de_valores_grafico
     except Exception as e:
-        return [[False, e]]
+        return [[False, e]], None, None
