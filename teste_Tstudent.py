@@ -37,11 +37,49 @@ def t_student_diferenca_media(amostra, media_populacional_prevista, alpha, bilat
         return [[False, e]]
     
 
-def t_student_comparacao_media_independente(amostra1, amostra2):
-    # Calculando a variancia populacional de cada amostra
-    variancia_pop_amostra1 = np.var(amostra1, ddof=0)
-    variancia_pop_amostra2 = np.var(amostra2, ddof=0)
-    # calculando 
+def t_student_comparacao_media_independente(amostra1, amostra2, alfa, bilateral = True):
+    try:
+        resultado = []
+        # Calculando a variancia amostral de cada amostra
+        variancia_amostral1 = np.var(amostra1, ddof=1)
+        variancia_amostral2 = np.var(amostra2, ddof=1)
+        # calculando a média amostral de cada amostra
+        media_amostra1 = np.mean(amostra1)
+        media_amostra2 = np.mean(amostra2)
+        # calculando o tamanho de cada amostra
+        n1 = len(amostra1)
+        n2 = len(amostra2)
+        # calculando o Sp
+        numerador_sp = (n1 - 1) * variancia_amostral1 + (n2 - 1) * variancia_amostral2
+        denominador_sp = n1 + n2 - 2
+        Sp = np.sqrt(numerador_sp / denominador_sp)
+        #Calculando o Tcalc
+        numerador_tcalc = media_amostra1 - media_amostra2
+        denominador_tcalc = Sp * np.sqrt(1/n1 + 1/n2)
+        Tcalc = numerador_tcalc / denominador_tcalc
+        # Calculando o Tcrit
+        Tcrit = stats.t.ppf(1 - alfa/2, n1 + n2 - 2) if bilateral else stats.t.ppf(1 - alfa, n1 + n2 - 2)
+        """stats.t.ppf(1 - alfa/2, n1 + n2 - 2) calcula o valor crítico de uma distribuição t-Student bilateral com
+        (n1 + n2 - 2) graus de liberdade e um nível de significância de alpha/2. Caso seja um teste unilateral, basta
+        utilizar (1 - alpha)"""
 
+        lista_aux = []
+        lista_aux.append(True)
+        lista_aux.append(f"Tcalc = {Tcalc} -------- Tcrit = {Tcrit} ")
+
+
+        if abs(Tcalc) < abs(Tcrit):
+            lista_aux.append(f"|Tcalc| = {abs(Tcalc)} < |Tcrit| = {abs(Tcrit)}")
+            lista_aux.append(f"Aceito a hipótese H0 em que as médias populacionais são iguais")
+        else:
+            lista_aux.append(f"|Tcalc| = {abs(Tcalc)} > |Tcrit| = {abs(Tcrit)}")
+            lista_aux.append(f"Rejeito a hipótese H0 em que as médias populacionais são iguais")
+
+        resultado.append(lista_aux)
+        return resultado
+
+    except Exception as e:
+        return [[False, e]]
+    
 def t_student_comparacao_media_emparelhada():
     pass
