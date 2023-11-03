@@ -103,10 +103,10 @@ def t_student_diferenca_media_emparelhada(amostra1, amostra2, alfa, bilateral = 
 
         if abs(Tcalc) < abs(Tcrit):
             lista_aux.append(f"|Tcalc| = {abs(Tcalc)} < |Tcrit| = {abs(Tcrit)}")
-            lista_aux.append(f"Aceito a hipótese H0 em que as médias populacionais são iguais")
+            lista_aux.append(f"Aceito a hipótese H0 em que a diferença das médias populacionais é igual a zero")
         else:
             lista_aux.append(f"|Tcalc| = {abs(Tcalc)} > |Tcrit| = {abs(Tcrit)}")
-            lista_aux.append(f"Rejeito a hipótese H0 em que as médias populacionais são iguais")
+            lista_aux.append(f"Rejeito a hipótese H0 em que a diferença das médias populacionais é igual a zero")
 
         resultado.append(lista_aux)
         return resultado
