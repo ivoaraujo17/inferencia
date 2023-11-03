@@ -35,3 +35,13 @@ def t_student_diferenca_media(amostra, media_populacional_prevista, alpha, bilat
 
     except Exception as e:
         return [[False, e]]
+    
+
+def t_student_comparacao_media_independente(amostra1, amostra2):
+    # Calculando a variancia populacional de cada amostra
+    variancia_pop_amostra1 = np.var(amostra1, ddof=0)
+    variancia_pop_amostra2 = np.var(amostra2, ddof=0)
+    # calculando 
+
+def t_student_comparacao_media_emparelhada():
+    pass
