@@ -8,8 +8,7 @@ def teste_z(amostra,media_populacional_prevista, alpha, desvio_padrao = 0, bilat
         numerador_zcalc = np.mean(amostra) - media_populacional_prevista
         if desvio_padrao == 0:
             desvio_padrao = np.std(amostra, ddof = 1) # Se eu nao sei o desvio padrao da populacao, uso o da amostra
-        else:
-            denominador_zcalc = desvio_padrao / np.sqrt(len(amostra)) # Uso o desvio padrao da populacao informado na funçao
+        denominador_zcalc = desvio_padrao / np.sqrt(len(amostra)) # Uso o desvio padrao da populacao informado na funçao
         Zcalc = numerador_zcalc / denominador_zcalc
 
         # Encontrando o Zcrit
