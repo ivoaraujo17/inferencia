@@ -1,17 +1,17 @@
 from scipy import stats
 import numpy as np
 
-def t_student_diferenca_media(amostra, media_populacional_prevista, alpha, bilateral = True):
+def t_student_media(amostra, media_populacional_prevista, alpha, bilateral = True):
     try:
         resultado = []
         tamanho_da_amostra = len(amostra)
         # Encontrando o Zcalc
-        numerador_zcalc = np.mean(amostra) - media_populacional_prevista
-        denominador_zcalc = np.std(amostra, ddof = 1) / np.sqrt(tamanho_da_amostra)
-        Zcalc = numerador_zcalc / denominador_zcalc
+        numerador_tcalc = np.mean(amostra) - media_populacional_prevista
+        denominador_tcalc = np.std(amostra, ddof = 1) / np.sqrt(tamanho_da_amostra)
+        Tcalc = numerador_tcalc / denominador_tcalc
 
         # Encontrando o Zcrit
-        Zcrit = stats.t.ppf(1 - alpha/2, tamanho_da_amostra - 1) if bilateral else stats.t.ppf(1 - alpha, 
+        Tcrit = stats.t.ppf(1 - alpha/2, tamanho_da_amostra - 1) if bilateral else stats.t.ppf(1 - alpha, 
                                                                                             tamanho_da_amostra - 1)
         """stats.t.ppf(1 - alpha/2, tamanho_da_amostra - 1) calcula o valor crítico de uma distribuição t-Student 
         bilateral com (tamanho_da_amostra - 1) graus de liberdade e um nível de significância de alpha/2. Caso seja
@@ -20,14 +20,14 @@ def t_student_diferenca_media(amostra, media_populacional_prevista, alpha, bilat
         # Imprimindo os resultados
         lista_aux = []
         lista_aux.append(True)
-        lista_aux.append(f"Zcalc = {Zcalc} -------- Zcrit = {Zcrit} ")
+        lista_aux.append(f"Tcalc = {Tcalc} -------- Tcrit = {Tcrit} ")
 
 
-        if abs(Zcalc) < abs(Zcrit):
-            lista_aux.append(f"|Zcalc| = {abs(Zcalc)} < |Zcrit| = {abs(Zcrit)}")
+        if abs(Tcalc) < abs(Tcrit):
+            lista_aux.append(f"|Tcalc| = {abs(Tcalc)} < |Tcrit| = {abs(Tcrit)}")
             lista_aux.append(f"Aceito a hipótese H0 em que a média populacional é = {media_populacional_prevista}")
         else:
-            lista_aux.append(f"|Zcalc| = {abs(Zcalc)} > |Zcrit| = {abs(Zcrit)}")
+            lista_aux.append(f"|Tcalc| = {abs(Tcalc)} > |Tcrit| = {abs(Tcrit)}")
             lista_aux.append(f"Rejeito a hipótese H0 em que a média populacional é = {media_populacional_prevista}")
 
         resultado.append(lista_aux)
@@ -81,5 +81,35 @@ def t_student_comparacao_media_independente(amostra1, amostra2, alfa, bilateral 
     except Exception as e:
         return [[False, e]]
     
-def t_student_comparacao_media_emparelhada():
-    pass
+def t_student_diferenca_media_emparelhada(amostra1, amostra2, alfa, bilateral = True):
+    try:
+        resultado = []
+        n = len(amostra1)
+        # Encontrando a soma das diferenças das amostras
+        soma_diferencas = np.sum(np.array(amostra1) - np.array(amostra2)) #Transformando em array do np para fazer a diferença
+        # Encontrando a média das diferenças das amostras
+        media_diferencas = soma_diferencas / n
+        # Encontrando o desvio padrão amostral das diferenças das amostras
+        desvio_padrao_diferencas = np.std(np.array(amostra1) - np.array(amostra2), ddof = 1)
+        # Encontrando o Tcalc
+        Tcalc = media_diferencas / (desvio_padrao_diferencas / np.sqrt(n))
+        # Encontrando o Tcrit
+        Tcrit = stats.t.ppf(1 - alfa/2, n - 1) if bilateral else stats.t.ppf(1 - alfa, n - 1)
+
+        lista_aux = []
+        lista_aux.append(True)
+        lista_aux.append(f"Tcalc = {Tcalc} -------- Tcrit = {Tcrit} ")
+
+
+        if abs(Tcalc) < abs(Tcrit):
+            lista_aux.append(f"|Tcalc| = {abs(Tcalc)} < |Tcrit| = {abs(Tcrit)}")
+            lista_aux.append(f"Aceito a hipótese H0 em que as médias populacionais são iguais")
+        else:
+            lista_aux.append(f"|Tcalc| = {abs(Tcalc)} > |Tcrit| = {abs(Tcrit)}")
+            lista_aux.append(f"Rejeito a hipótese H0 em que as médias populacionais são iguais")
+
+        resultado.append(lista_aux)
+        return resultado
+    
+    except Exception as e:
+        return [[False, e]]
