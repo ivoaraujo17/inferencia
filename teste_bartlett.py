@@ -19,7 +19,7 @@ def teste_bartlett(amostras, alfa):
         # O valor da soma (ni - 1) é o mesmo do denomianador de cada amostra
         soma_ni = soma_denominador
         # Encontrando o valor de q
-        q = soma_ni * np.log(Sp**2) - np.sum([(len(amostra) - 1) * np.log(np.var(amostra, ddof = 1)) for amostra in amostras])
+        q = soma_ni * np.log(Sp) - np.sum([(len(amostra) - 1) * np.log(np.var(amostra, ddof = 1)) for amostra in amostras])
         # Encontrando o valor de c (x²)
         X = 1 + (1 / (3 * (k - 1))) * np.sum([1 / (len(amostra) - 1) - 1/(N - k) for amostra in amostras])
         # Encontrando o Bcalc
