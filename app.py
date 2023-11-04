@@ -29,6 +29,11 @@ class App(ctk.CTk):
         # radio buttons com a lista de testes
         self.teste_1 = ctk.CTkRadioButton(master=self, text="Kolmogorov", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=1)
         self.teste_2 = ctk.CTkRadioButton(master=self, text="Shapiro_Wilk", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=2)
+        self.teste_3 = ctk.CTkRadioButton(master=self, text="Teste_Z", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=3)
+        self.teste_4 = ctk.CTkRadioButton(master=self, text="T_student_media", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=4)
+        self.teste_5 = ctk.CTkRadioButton(master=self, text="T_student_comparacao", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=5)
+        self.teste_6 = ctk.CTkRadioButton(master=self, text="T_student_diferenca", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=6)
+        self.teste_7 = ctk.CTkRadioButton(master=self, text="Bartlett", command=self.remove_tabview, font=self.my_font, variable=self.radio_var, value=7)
         # botão de seleção do arquivo excel
         self.button_select_file = ctk.CTkButton(master=self, text="Selecionar arquivo", font=self.my_font, command=self.button_select_file_event, hover_color=self.hover_color_bt)
         # label que mostra o caminho do arquivo selecionado
@@ -139,10 +144,15 @@ class App(ctk.CTk):
         # Coloca cada elemento em seu devido lugar
         ## titulos
         ctk.CTkLabel(master=self, text="Inferência de dados", font=self.my_font).place(x=50, y=20)
-        ctk.CTkLabel(master=self, text="Escolha o tipo de teste:", font=self.my_font).place(x=50, y=70)
+        ctk.CTkLabel(master=self, text="Escolha o tipo de teste:", font=self.my_font).place(x=50, y=50)
         # Botão de selecao dos testes
-        self.teste_1.place(x=65, y=120)
-        self.teste_2.place(x=65, y=170)
+        self.teste_1.place(x=65, y=80)
+        self.teste_2.place(x=65, y=110)
+        self.teste_3.place(x=65, y=140)
+        self.teste_4.place(x=65, y=170)
+        self.teste_5.place(x=65, y=200)
+        self.teste_6.place(x=65, y=225)
+        self.teste_7.place(x=250, y=80)
         # Titulos da seleção do arquivo excel
         ctk.CTkLabel(master=self, text="""Escolha o arquivo Excel""", font=self.my_font, anchor='w').place(x=600, y=70)
         ctk.CTkLabel(master=self, text="O arquivo deve conter apenas uma coluna com as amostras", font=self.my_font_low, anchor='w').place(x=600, y=110)
@@ -151,9 +161,9 @@ class App(ctk.CTk):
         # Label que mostra o caminho do arquivo selecionado
         self.label_file_select.place(x=600, y=175)
         # 
-        self.valor_alpha.place(x=300, y=180)
+        self.valor_alpha.place(x=340, y=180)
         # Botão de execução
-        self.button_executar.place(x=300, y=220)
+        self.button_executar.place(x=340, y=220)
         # Tabela de resultados
         self.tabview.place(x=50, y=250)
         
