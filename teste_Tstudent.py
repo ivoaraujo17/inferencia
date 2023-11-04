@@ -1,8 +1,11 @@
 from scipy import stats
 import numpy as np
+import pandas as pd
 
-def t_student_media(amostra, media_populacional_prevista, alpha, bilateral = True):
+def t_student_media(caminho_arquivo, media_populacional_prevista, alpha, bilateral = True):
     try:
+        df = pd.read_csv(caminho_arquivo)
+        amostra = df.iloc[:,0]
         resultado = []
         tamanho_da_amostra = len(amostra)
         # Encontrando o Zcalc
@@ -37,8 +40,11 @@ def t_student_media(amostra, media_populacional_prevista, alpha, bilateral = Tru
         return [[False, e]]
     
 
-def t_student_comparacao_media_independente(amostra1, amostra2, alfa, bilateral = True):
+def t_student_comparacao_media_independente(caminho_arquivo, alfa, bilateral = True):
     try:
+        df = pd.read_csv(caminho_arquivo)
+        amostra1 = df.iloc[:,0]
+        amostra2 = df.iloc[:,1]
         resultado = []
         # Calculando a variancia amostral de cada amostra
         variancia_amostral1 = np.var(amostra1, ddof=1)
@@ -81,8 +87,11 @@ def t_student_comparacao_media_independente(amostra1, amostra2, alfa, bilateral 
     except Exception as e:
         return [[False, e]]
     
-def t_student_diferenca_media_emparelhada(amostra1, amostra2, alfa, bilateral = True):
+def t_student_diferenca_media_emparelhada(caminho_arquivo, alfa, bilateral = True):
     try:
+        df = pd.read_csv(caminho_arquivo)
+        amostra1 = df.iloc[:,0]
+        amostra2 = df.iloc[:,1]
         resultado = []
         n = len(amostra1)
         # Encontrando a soma das diferenças das amostras

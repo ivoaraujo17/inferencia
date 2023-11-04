@@ -1,9 +1,12 @@
 from scipy import stats
 import numpy as np
+import pandas as pd
 
-def teste_z(amostra,media_populacional_prevista, alpha, desvio_padrao = 0, bilateral = True):
+def teste_z(caminho_do_arquivo, media_populacional_prevista, alpha, desvio_padrao = 0, bilateral = True):
     try:
         resultado = []
+        df = pd.read_csv(caminho_do_arquivo)
+        amostra = df.iloc[:,0]
         # Encontrando o Zcalc
         numerador_zcalc = np.mean(amostra) - media_populacional_prevista
         if desvio_padrao == 0:

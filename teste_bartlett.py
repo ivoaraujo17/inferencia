@@ -1,8 +1,15 @@
 import numpy as np
 from scipy import stats
+import pandas as pd
 
-def teste_bartlett(amostras, alfa):
+def teste_bartlett(caminho_do_arquivo, alfa):
     try:
+        amostras = []
+        df = pd.read_csv(caminho_do_arquivo)
+        for i in range(len(df.columns)):
+            lista_de_valores = df.iloc[:, i]
+            lista_de_valores = lista_de_valores.dropna()
+            amostras.append(lista_de_valores)
         resultado = []
         k = len(amostras)
         # Encontrando a soma de todas as amostras
