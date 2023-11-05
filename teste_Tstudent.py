@@ -91,6 +91,7 @@ def t_student_comparacao_media_independente(caminho_arquivo, alfa, bilateral = T
         return [[False, e]]
     
 def t_student_diferenca_media_emparelhada(caminho_arquivo, alfa, bilateral = True):
+    # Nesse teste, as variâncias das duas amostras precisam ser homogêneas. A criaçao das amostras passou por um teste de bartlett
     try:
         df = pd.read_csv(caminho_arquivo)
         amostra1 = df.iloc[:,0]
