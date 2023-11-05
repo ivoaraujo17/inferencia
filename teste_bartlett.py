@@ -5,11 +5,13 @@ import pandas as pd
 def teste_bartlett(caminho_do_arquivo, alfa):
     try:
         amostras = []
+        info_amostras = []
         df = pd.read_csv(caminho_do_arquivo)
         for i in range(len(df.columns)):
             lista_de_valores = df.iloc[:, i]
             lista_de_valores = lista_de_valores.dropna()
             amostras.append(lista_de_valores)
+            info_amostras.append(f"Tamanho da amostra = {len(lista_de_valores)}, media amostral = {np.mean(lista_de_valores)}, variancia amostral = {np.var(lista_de_valores, ddof = 1)}")
         resultado = []
         k = len(amostras)
         # Encontrando a soma de todas as amostras
@@ -46,7 +48,7 @@ def teste_bartlett(caminho_do_arquivo, alfa):
             lista_aux.append(f"Rejeito a hipótese H0 em que as variâncias populacionais são homogêneas")
         
         resultado.append(lista_aux)
-        return resultado
+        return resultado, info_amostras, k # k é o número de amostras
 
     except Exception as e:
         return [[False, e]]
