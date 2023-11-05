@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from kolmogorov_smirnov import kolmogorov_smirnov, kolmogorov_smirnov_
 from shapiro_wilk import shapiro_wilk
+from teste_z import teste_z
 
 
 class App(ctk.CTk):
@@ -44,6 +45,8 @@ class App(ctk.CTk):
         self.tabview = ctk.CTkTabview(master=self, width=1100, height=320)
         #valor alpha
         self.valor_alpha = ctk.CTkEntry(master=self, width=80, placeholder_text='alpha')
+        #valor média populacional prevista
+        self.valor_media_populacional_prevista = ctk.CTkEntry(master=self, width=80, placeholder_text='media pop')
         
 
     def remove_tabview(self):
@@ -64,6 +67,13 @@ class App(ctk.CTk):
         else:
             try:
                 alfa = float(self.valor_alpha.get())
+            except:
+                return
+        if self.valor_media_populacional_prevista.get() == '':
+            return
+        else:
+            try:
+                media_populacional = float(self.valor_media_populacional_prevista.get())
             except:
                 return
         if self.radio_var.get() == 1 and self.file_is_valid():
@@ -125,6 +135,20 @@ class App(ctk.CTk):
                     canvas = FigureCanvasTkAgg(fig, self.tabview.tab(nome))
                     # grafico com o resultado
                     canvas.get_tk_widget().grid(row=2, column=0)
+        elif self.radio_var.get() == 3 and self.file_is_valid():
+            resultados, info_amostra = teste_z(self.file_name.get(), media_populacional, alfa)
+            if not resultados[0][0]:
+                self.tabview.add("amostra_1")
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text=resultados[0][1], font=self.my_font_low).grid(row=1, column=0)
+            else:
+                for i, resultado in enumerate(resultados):
+                    nome = str(f'amostra_{i+1}')
+                    self.tabview.add(nome)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=info_amostra[0], font=self.my_font_low).grid(row=0, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[1], font=self.my_font_low).grid(row=1, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[2], font=self.my_font_low).grid(row=2, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[3], font=self.my_font_low).grid(row=3, column=0)
         else:
             print("nenhum teste selecionado")
     
@@ -162,6 +186,8 @@ class App(ctk.CTk):
         self.label_file_select.place(x=600, y=175)
         # 
         self.valor_alpha.place(x=340, y=180)
+        # botao da média populacional prevista
+        self.valor_media_populacional_prevista.place(x=340, y=140)
         # Botão de execução
         self.button_executar.place(x=340, y=220)
         # Tabela de resultados

@@ -5,8 +5,10 @@ import pandas as pd
 def teste_z(caminho_do_arquivo, media_populacional_prevista, alpha, desvio_padrao = 0, bilateral = True):
     try:
         resultado = []
+        info_amostra = []
         df = pd.read_csv(caminho_do_arquivo)
         amostra = df.iloc[:,0]
+        info_amostra.append(f"Tamanho da amostra = {len(amostra)}, media amostral = {np.mean(amostra)}")
         # Encontrando o Zcalc
         numerador_zcalc = np.mean(amostra) - media_populacional_prevista
         if desvio_padrao == 0:
@@ -34,6 +36,6 @@ def teste_z(caminho_do_arquivo, media_populacional_prevista, alpha, desvio_padra
             lista_aux.append(f"Rejeito a hipótese H0 em que a média populacional é = {media_populacional_prevista}")
 
         resultado.append(lista_aux)
-        return resultado
+        return resultado, info_amostra
     except Exception as e:
         return [[False, e]]
