@@ -5,10 +5,9 @@ import pandas as pd
 def teste_z(caminho_do_arquivo, media_populacional_prevista, alpha, desvio_padrao = 0, bilateral = True):
     try:
         resultado = []
-        info_amostra = []
         df = pd.read_csv(caminho_do_arquivo)
         amostra = df.iloc[:,0]
-        info_amostra.append(f"Tamanho da amostra = {len(amostra)}, media amostral = {np.mean(amostra)}")
+        info_amostra = [f"Tamanho da amostra = {len(amostra)}, media amostral = {np.mean(amostra)}"]
         # Encontrando o Zcalc
         numerador_zcalc = np.mean(amostra) - media_populacional_prevista
         if desvio_padrao == 0:

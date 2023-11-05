@@ -6,6 +6,7 @@ def t_student_media(caminho_arquivo, media_populacional_prevista, alpha, bilater
     try:
         df = pd.read_csv(caminho_arquivo)
         amostra = df.iloc[:,0]
+        info_amostra = [f"Tamanho da amostra = {len(amostra)}, media amostral = {np.mean(amostra)}"]
         resultado = []
         tamanho_da_amostra = len(amostra)
         # Encontrando o Zcalc
@@ -34,7 +35,7 @@ def t_student_media(caminho_arquivo, media_populacional_prevista, alpha, bilater
             lista_aux.append(f"Rejeito a hipótese H0 em que a média populacional é = {media_populacional_prevista}")
 
         resultado.append(lista_aux)
-        return resultado
+        return resultado, info_amostra
 
     except Exception as e:
         return [[False, e]]
@@ -44,7 +45,9 @@ def t_student_comparacao_media_independente(caminho_arquivo, alfa, bilateral = T
     try:
         df = pd.read_csv(caminho_arquivo)
         amostra1 = df.iloc[:,0]
+        info_amostra1 = [f"Tamanho da amostra = {len(amostra1)}, media amostral = {np.mean(amostra1)}"]
         amostra2 = df.iloc[:,1]
+        info_amostra2 = [f"Tamanho da amostra = {len(amostra2)}, media amostral = {np.mean(amostra2)}"]
         resultado = []
         # Calculando a variancia amostral de cada amostra
         variancia_amostral1 = np.var(amostra1, ddof=1)
@@ -82,7 +85,7 @@ def t_student_comparacao_media_independente(caminho_arquivo, alfa, bilateral = T
             lista_aux.append(f"Rejeito a hipótese H0 em que as médias populacionais são iguais")
 
         resultado.append(lista_aux)
-        return resultado
+        return resultado, info_amostra1, info_amostra2
 
     except Exception as e:
         return [[False, e]]
@@ -91,7 +94,9 @@ def t_student_diferenca_media_emparelhada(caminho_arquivo, alfa, bilateral = Tru
     try:
         df = pd.read_csv(caminho_arquivo)
         amostra1 = df.iloc[:,0]
+        info_amostra1 = [f"Tamanho da amostra = {len(amostra1)}, media amostral = {np.mean(amostra1)}"]
         amostra2 = df.iloc[:,1]
+        info_amostra2 = [f"Tamanho da amostra = {len(amostra2)}, media amostral = {np.mean(amostra2)}"]
         resultado = []
         n = len(amostra1)
         # Encontrando a soma das diferenças das amostras
@@ -117,7 +122,7 @@ def t_student_diferenca_media_emparelhada(caminho_arquivo, alfa, bilateral = Tru
             lista_aux.append(f"Rejeito a hipótese H0 em que a diferença das médias populacionais é igual a zero")
 
         resultado.append(lista_aux)
-        return resultado
+        return resultado, info_amostra1, info_amostra2
     
     except Exception as e:
         return [[False, e]]

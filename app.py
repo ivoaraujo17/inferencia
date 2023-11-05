@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from kolmogorov_smirnov import kolmogorov_smirnov, kolmogorov_smirnov_
 from shapiro_wilk import shapiro_wilk
 from teste_z import teste_z
+from teste_Tstudent import t_student_media, t_student_comparacao_media_independente, t_student_diferenca_media_emparelhada
 
 
 class App(ctk.CTk):
@@ -69,13 +70,8 @@ class App(ctk.CTk):
                 alfa = float(self.valor_alpha.get())
             except:
                 return
-        if self.valor_media_populacional_prevista.get() == '':
-            return
-        else:
-            try:
-                media_populacional = float(self.valor_media_populacional_prevista.get())
-            except:
-                return
+        
+        # Teste 1: Kolmogorov
         if self.radio_var.get() == 1 and self.file_is_valid():
             if "amostras_normais.csv" in self.file_name.get():
                 resultados, Xis = kolmogorov_smirnov(self.file_name.get(), alfa)
@@ -113,6 +109,8 @@ class App(ctk.CTk):
                     # grafico com o resultado
                     canvas.get_tk_widget().grid(row=2, column=0)
                 self.tabview.tab('amostra_1').focus_force()
+
+        # Teste 2: Shapiro-Wilk
         elif self.radio_var.get() == 2 and self.file_is_valid():
             resultados, valores_grafico = shapiro_wilk(self.file_name.get(), alfa)
             if not resultados[0][0]:
@@ -135,7 +133,15 @@ class App(ctk.CTk):
                     canvas = FigureCanvasTkAgg(fig, self.tabview.tab(nome))
                     # grafico com o resultado
                     canvas.get_tk_widget().grid(row=2, column=0)
+
+        # Teste 3: Teste Z
         elif self.radio_var.get() == 3 and self.file_is_valid():
+            if self.valor_media_populacional_prevista.get() == '':
+                return
+            try:
+                media_populacional = float(self.valor_media_populacional_prevista.get())
+            except:
+                return
             resultados, info_amostra = teste_z(self.file_name.get(), media_populacional, alfa)
             if not resultados[0][0]:
                 self.tabview.add("amostra_1")
@@ -149,6 +155,62 @@ class App(ctk.CTk):
                     ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[1], font=self.my_font_low).grid(row=1, column=0)
                     ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[2], font=self.my_font_low).grid(row=2, column=0)
                     ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[3], font=self.my_font_low).grid(row=3, column=0)
+
+        # Teste 4: T-student media
+        elif self.radio_var.get() == 4 and self.file_is_valid():
+            if self.valor_media_populacional_prevista.get() == '':
+                return
+            try:
+                media_populacional = float(self.valor_media_populacional_prevista.get())
+            except:
+                return
+            resultados, info_amostra = t_student_media(self.file_name.get(), media_populacional, alfa)
+            if not resultados[0][0]:
+                self.tabview.add("amostra_1")
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text=resultados[0][1], font=self.my_font_low).grid(row=1, column=0)
+            else:
+                for i, resultado in enumerate(resultados):
+                    nome = str(f'amostra_{i+1}')
+                    self.tabview.add(nome)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=info_amostra[0], font=self.my_font_low).grid(row=0, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[1], font=self.my_font_low).grid(row=1, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[2], font=self.my_font_low).grid(row=2, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[3], font=self.my_font_low).grid(row=3, column=0)
+
+        # Teste 5: T-student comparacao medias independentes
+        elif self.radio_var.get() == 5 and self.file_is_valid():
+            resultados, info_amostra1, info_amostra2 = t_student_comparacao_media_independente(self.file_name.get(), alfa)
+            if not resultados[0][0]:
+                self.tabview.add("amostra_1")
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text=resultados[0][1], font=self.my_font_low).grid(row=1, column=0)
+            else:
+                for i, resultado in enumerate(resultados):
+                    nome = str(f'amostra_{i+1}')
+                    self.tabview.add(nome)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=info_amostra1[0], font=self.my_font_low).grid(row=0, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=info_amostra2[0], font=self.my_font_low).grid(row=1, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[1], font=self.my_font_low).grid(row=2, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[2], font=self.my_font_low).grid(row=3, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[3], font=self.my_font_low).grid(row=4, column=0)
+
+        # Teste 6: T-student diferença de medias emparelhadas
+        elif self.radio_var.get() == 6 and self.file_is_valid():
+            resultados, info_amostra1, info_amostra2 = t_student_diferenca_media_emparelhada(self.file_name.get(), alfa)
+            if not resultados[0][0]:
+                self.tabview.add("amostra_1")
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text="Erro", font=self.my_font_low).grid(row=0, column=0)
+                ctk.CTkLabel(master=self.tabview.tab("amostra_1"), text=resultados[0][1], font=self.my_font_low).grid(row=1, column=0)
+            else:
+                for i, resultado in enumerate(resultados):
+                    nome = str(f'amostra_{i+1}')
+                    self.tabview.add(nome)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=info_amostra1[0], font=self.my_font_low).grid(row=0, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=info_amostra2[0], font=self.my_font_low).grid(row=1, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[1], font=self.my_font_low).grid(row=2, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[2], font=self.my_font_low).grid(row=3, column=0)
+                    ctk.CTkLabel(master=self.tabview.tab(nome), text=resultado[3], font=self.my_font_low).grid(row=4, column=0)
         else:
             print("nenhum teste selecionado")
     
